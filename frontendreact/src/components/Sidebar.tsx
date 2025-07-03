@@ -61,14 +61,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onToggle }) => {
   ];
 
   return (
-    <div className={`bg-white shadow-md h-screen transition-all duration-300 ${isOpen ? 'w-64' : 'w-16'}`}>
-      <div className="p-4 flex justify-between items-center">
-        {isOpen && <h2 className="text-lg font-semibold text-primary">T3Shield</h2>}
+    <div className={`fixed top-16 left-0 bg-white shadow-md h-[calc(100vh-64px)] z-10 transition-all duration-300 ${isOpen ? 'w-60' : 'w-16'}`}>
+      <div className="p-3 flex justify-between items-center border-b border-gray-100">
+        {isOpen && <h2 className="text-sm font-semibold text-primary">T3Shield</h2>}
         <button 
           onClick={onToggle} 
           className="p-1 rounded-full hover:bg-gray-100 focus:outline-none"
+          aria-label={isOpen ? 'Réduire le menu' : 'Étendre le menu'}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {isOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
             ) : (
@@ -78,20 +79,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onToggle }) => {
         </button>
       </div>
 
-      <nav className="mt-8">
-        <ul>
+      <nav className="mt-4">
+        <ul className="space-y-1">
           {navItems.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`flex items-center px-4 py-3 ${
+                className={`flex items-center px-3 py-2 text-sm ${
                   currentPath === item.path
-                    ? 'bg-primary bg-opacity-10 text-primary border-r-4 border-primary'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? 'bg-primary bg-opacity-10 text-primary border-r-2 border-primary'
+                    : 'text-gray-600 hover:bg-gray-50'
                 } transition-colors duration-200`}
+                title={item.name}
               >
                 <span className="mr-3">{item.icon}</span>
-                {isOpen && <span>{item.name}</span>}
+                {isOpen && <span className="truncate">{item.name}</span>}
               </Link>
             </li>
           ))}

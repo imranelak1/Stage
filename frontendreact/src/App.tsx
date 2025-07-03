@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import './index.css'; // Make sure this is present!
+import './styles/fixes.css'; // Corrections UI
 import ApiDebug from "./ApiDebug";
 
 // Import components

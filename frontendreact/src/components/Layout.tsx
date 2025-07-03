@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
+import type { ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -17,9 +18,9 @@ const Layout: React.FC<LayoutProps> = ({ children, onExport }) => {
   return (
     <div className="min-h-screen bg-background-subtle font-sans">
       <Header onExport={onExport} />
-      <div className="flex">
+      <div className="flex relative">
         <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-        <main className={`flex-1 p-6 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-16'}`}>
+        <main className="flex-1 p-4 sm:p-6 transition-all duration-300" style={{ marginLeft: sidebarOpen ? '240px' : '60px' }}>
           {children}
         </main>
       </div>

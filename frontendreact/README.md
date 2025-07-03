@@ -1,11 +1,52 @@
-# React + TypeScript + Vite
+# SensThings Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application frontend React pour SensThings, développée avec Vite, TypeScript et TailwindCSS.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+```
+
+## Développement local
+
+```bash
+npm run dev
+```
+
+## Construction pour production
+
+```bash
+npm run build
+```
+
+## Déploiement sur Vercel
+
+Le projet est configuré pour être déployé sur Vercel. Un fichier `vercel.json` est inclus à la racine du projet avec les paramètres de configuration nécessaires.
+
+### Étapes pour déployer sur Vercel
+
+1. Créez un compte sur [Vercel](https://vercel.com) si vous n'en avez pas déjà un
+2. Installez l'outil CLI Vercel (optionnel)
+   ```bash
+   npm install -g vercel
+   ```
+3. Connectez-vous à votre compte Vercel
+   ```bash
+   vercel login
+   ```
+4. Déployez l'application
+   ```bash
+   vercel
+   ```
+   
+Alternativement, vous pouvez déployer directement depuis l'interface web de Vercel en important votre projet depuis GitHub.
+
+### Variables d'environnement
+
+Les variables d'environnement suivantes doivent être configurées dans le tableau de bord Vercel :
+
+- `VITE_API_BASE_URL` : URL de base de l'API backend (par exemple, https://api.sensthings.ma)
 
 ## Expanding the ESLint configuration
 
