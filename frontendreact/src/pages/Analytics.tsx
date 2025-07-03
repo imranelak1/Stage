@@ -4,6 +4,7 @@ import TrendChart from '../components/TrendChart';
 import DetectionTypeChart from '../components/DetectionTypeChart';
 import RegionalDistributionChart from '../components/RegionalDistributionChart';
 import VerificationStatusChart from '../components/VerificationStatusChart';
+import SchoolsChart from '../components/SchoolsChart';
 import { useAnalyticsData } from '../hooks/useAnalyticsData';
 import { useStatisticsData } from '../hooks/useStatisticsData';
 import { getDefaultStartDate, getDefaultEndDate, formatDateForDisplay } from '../utils/dateUtils';
@@ -21,6 +22,7 @@ const Analytics: React.FC = () => {
     summary: summaryData, 
     hourlyData,
     regionData,
+    tableData,
     communicationTypesData,
     loadingSummary: statsLoading, 
     errorSummary: statsError 
@@ -102,7 +104,7 @@ const Analytics: React.FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <RegionalDistributionChart 
           regionData={regionData} 
           loading={loading} 
@@ -111,6 +113,13 @@ const Analytics: React.FC = () => {
           verifiedCount={verificationStats.verified} 
           deniedCount={verificationStats.denied}
           loading={loading} 
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        <SchoolsChart
+          analyses={analyses}
+          loading={loading}
         />
       </div>
     </>
