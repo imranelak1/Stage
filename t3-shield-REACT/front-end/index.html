@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>T3Shield - Tableau de Bord National</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    
+    <!-- Common Navigation CSS -->
+    <link rel="stylesheet" href="/static/css/nav.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">    
+    <style>
+        /* Back to Country button styles */
+        .back-to-country-control a {
+            background-color: white;
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+        
+        .back-to-country-control a:hover {
+            background-color: #f8f9fa;
+        }
+        .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(44, 62, 80, 0.9);
+        color: white;
+        text-align: center;
+        padding: 5px 0;
+        font-size: 12px;
+        z-index: 900;
+    }
+    </style>
+</head>
+<body> 
+    <!-- Clean Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="loading-progress"></div>
+        <div class="loading-message">Veuillez patienter...</div>
+    </div>
+
+    <header>
+        <!-- Desktop layout (unchanged) -->
+        <div class="desktop-header">
+            <h1>
+                <div class="header-logo">
+                    <img src="/static/logo-cropped.svg" alt="T3Shield Logo">
+                </div>
+                T3Shield - Tableau de Bord National
+            </h1>
+            <div class="nav-links">
+                <a href="/dashboard-national" class="active">Carte</a>
+                <a href="/statistiques">Statistiques</a>
+            </div>
+            <div class="user-info">
+                <span id="current-time"></span>
+                <span class="user-name">Admin</span>
+                <button onclick="logout()" class="logout-btn" title="Déconnexion">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile layout (two-line) -->
+        <div class="mobile-header">
+            <!-- First line: Logo + Title + User info -->
+            <div class="header-top-line">
+                <div class="header-left">
+                    <div class="header-logo">
+                        <img src="/static/logo-cropped.svg" alt="T3Shield Logo">
+                    </div>
+                    <h1>T3Shield</h1>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Admin</span>
+                    <button onclick="logout()" class="logout-btn" title="Déconnexion">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Second line: Navigation switches -->
+            <div class="header-bottom-line">
+                <div class="mobile-nav-switches">
+                    <a href="/dashboard-national" class="mobile-nav-switch active">Carte</a>
+                    <span style="flex: 1;"></span>
+                    <a href="/statistiques" class="mobile-nav-switch">Statistiques</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Floating Filter/Export Bar -->
+        <div id="floating-filter-bar" class="floating-filter-bar">
+            <button id="filters-toggle" class="filter-toggle">FILTRES ▶</button>
+            <button id="refresh-btn" class="refresh-btn" title="Actualiser les données">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H6a.5.5 0 0 1 0-1h1.5V3.5A.5.5 0 0 1 8 3zm3 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h.5V3.5A.5.5 0 0 1 11 3z"/>
+                    <path d="M3.732 1.732a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L4.732 2.439a.5.5 0 0 1 0-.707z"/>
+                    <path d="M2.5 11a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+                Actualiser
+            </button>
+            <button id="export-btn" class="export-btn" title="Exporter les données">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Exporter
+            </button>
+        </div>
+
+        <!-- Filter Overlay Panel (hidden by default) -->
+        <div id="filter-overlay" class="filter-overlay" style="display:none;">
+            <div class="filter-overlay-content">
+                <div class="mobile-filter-toggle">
+                    <button id="mobile-filters-toggle" class="filter-toggle">FILTRES ▲</button>
+                </div>
+                <button id="close-filter-overlay" class="close-overlay-btn">&times;</button>
+                <!-- Existing filter panel content goes here -->
+                <div class="filter-panel">
+            
+                    <div class="filters-content">
+                        <div class="filter-section">
+                            <h3>Type d'Analyse</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="analysis-type" value="generale" checked>
+                                    <span class="checkmark yellow"></span>
+                                    Potentiel
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="analysis-type" value="mobilite" checked>
+                                    <span class="checkmark orange"></span>
+                                    Annoté
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="analysis-type" value="verifier" checked>
+                                    <span class="checkmark red"></span>
+                                    Confirmé
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="analysis-type" value="denied" checked>
+                                    <span class="checkmark gray"></span>
+                                    Fausse Alerte
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="filter-section">
+                            <h3>Opérateur</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="operateur" value="Orange" checked>
+                                    <span class="checkmark"></span>
+                                    Orange
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="operateur" value="Inwi" checked>
+                                    <span class="checkmark"></span>
+                                    Inwi
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="operateur" value="IAM" checked>
+                                    <span class="checkmark"></span>
+                                    IAM
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h3>Type de Communication</h3>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="type-communication" value="GSM" checked>
+                                    <span class="checkmark"></span>
+                                    GSM
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="type-communication" value="Appel Vocal" checked>
+                                    <span class="checkmark"></span>
+                                    Appel Vocal
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="type-communication" value="Appel WhatsApp" checked>
+                                    <span class="checkmark"></span>
+                                    Appel WhatsApp
+                                </label>
+                            </div>
+                        </div> -->
+                        
+                        <div class="filter-section">
+                            <h3>Plage Horaire</h3>
+                            <div class="time-range">
+                                <div class="time-input">
+                                    <label for="start-time">De:</label>
+                                    <input type="datetime-local" id="start-time">
+                                </div>
+                                <div class="time-input">
+                                    <label for="end-time">À:</label>
+                                    <input type="datetime-local" id="end-time">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Floating/Overlay Filter Controls -->
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <div class="details-panel" id="details-panel">
+            <div class="details-header">
+                <h2 id="details-title">Détails de l'Entité</h2>
+                <button id="close-details" class="btn-close">×</button>
+            </div>
+            <!-- Replace the existing details-content div with this updated version -->
+            <div class="details-content">
+                <div class="analysis-summary">
+                    <div class="count-container">
+                        <div class="count-box yellow" id="generale-count-box" onclick="switchAnalysisType('generale')">
+                            <span class="count-number" id="generale-count">0</span>
+                            <span class="count-label">Potentiel</span>
+                        </div>
+                        <div class="count-box orange" id="mobilite-count-box" onclick="switchAnalysisType('mobilite')">
+                            <span class="count-number" id="mobilite-count">0</span>
+                            <span class="count-label">Annoté</span>
+                        </div>
+                        <div class="count-box red" id="verifier-count-box" onclick="switchAnalysisType('verifier')">
+                            <span class="count-number" id="verifier-count">0</span>
+                            <span class="count-label">Confirmé</span>
+                        </div>
+                        <div class="count-box gray" id="denied-count-box" onclick="switchAnalysisType('denied')">
+                            <span class="count-number" id="denied-count">0</span>
+                            <span class="count-label">Fausse Alerte</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analysis-details">
+                    <h3>Analyses Récentes</h3>
+                    <!-- In the details-content div, update the table structure -->
+                <div class="analyses-table-container">
+                    <table id="analyses-table" class="analyses-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Opérateur</th>
+                                <th>Type</th>
+                                <th>Matière</th>
+                                <th>Localisation</th>
+                                <th>N° Étudiant</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analyses-list">
+                            <!-- Analysis items will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                    <div class="pagination-controls">
+                        <button id="prev-page" class="pagination-btn" disabled>Précédent</button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-page" class="pagination-btn">Suivant</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="copyright">
+            &copy; 2025 T3-Shield. Tous droits réservés.
+        </div>
+    </footer>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/static/js/global-cache.js"></script>
+    <script src="/static/js/user-management.js"></script>
+    <script src="/static/js/data.js"></script>
+    <script src="/static/js/filters.js"></script>
+    <script src="/static/js/map.js"></script>
+    <!-- Add this script right before the closing body tag -->
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to get user from localStorage
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            
+            if (user) {
+                // Update user info in header
+                const userNameElement = document.querySelector('.user-name');
+                if (userNameElement) {
+                    userNameElement.textContent = user.full_name;
+                }
+            } else {
+                // Check with server if we have a valid session
+                fetch('/t3shield/api/current-user')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Not authenticated');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Store user info
+                        localStorage.setItem('user', JSON.stringify(data));
+                        
+                        // Update user info in header
+                        const userNameElement = document.querySelector('.user-name');
+                        if (userNameElement) {
+                            userNameElement.textContent = data.full_name;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Auth check error:', error);
+                        // Redirect to login page if not authenticated
+                        window.location.href = '/login';
+                    });
+            }
+        });
+        
+        // Add logout functionality
+        function logout() {
+            fetch('/t3shield/api/logout', {
+                method: 'POST'
+            })
+            .then(() => {
+                // Clear local storage
+                localStorage.removeItem('user');
+                
+                // Redirect to login page
+                window.location.href = '/login';
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+            });
+        }
+    </script>
+    
+    <!-- Details Record Modal -->
+    <div id="details-modal" class="details-modal" style="display:none;">
+        <div class="details-modal-content">
+            <button id="close-details-modal" class="close-modal-btn">&times;</button>
+            <h3>Détail du signalement</h3>
+            <div id="details-modal-body"></div>
+        </div>
+    </div>
+    <!-- End Details Record Modal -->
+
+    <!-- Map container -->
+</body>
+</html>

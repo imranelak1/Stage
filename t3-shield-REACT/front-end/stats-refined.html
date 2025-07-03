@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>T3Shield - Tableau de bord statistique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(44, 62, 80, 0.9);
+            color: white;
+            text-align: center;
+            padding: 5px 0;
+            font-size: 12px;
+            z-index: 900;
+        }
+    </style>
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/stats-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Desktop layout (unchanged) -->
+        <div class="desktop-header">
+            <h1>
+                <div class="header-logo">
+                    <img src="/static/logo-cropped.svg" alt="T3Shield Logo">
+                </div>
+                T3Shield - Tableau de bord statistique
+            </h1>
+            <div class="nav-links">
+                <a href="/dashboard-national">Carte</a>
+                <a href="/statistiques" class="active">Statistiques</a>
+            </div>
+            <div class="user-info">
+                <span id="current-time"></span>
+                <span class="user-name">Admin</span>
+                <button onclick="logout()" class="logout-btn" title="Déconnexion">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile layout (two-line) -->
+        <div class="mobile-header">
+            <!-- First line: Logo + Title + User info -->
+            <div class="header-top-line">
+                <div class="header-left">
+                    <div class="header-logo">
+                        <img src="/static/logo-cropped.svg" alt="T3Shield Logo">
+                    </div>
+                    <h1>T3Shield</h1>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Admin</span>
+                    <button onclick="logout()" class="logout-btn" title="Déconnexion">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Second line: Navigation switches -->
+            <div class="header-bottom-line">
+                <div class="mobile-nav-switches">
+                    <a href="/dashboard-national" class="mobile-nav-switch">Carte</a>
+                    <span style="flex: 1;"></span>
+                    <a href="/statistiques" class="mobile-nav-switch active">Statistiques</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Clean Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="loading-progress"></div>
+        <div class="loading-message">Veuillez patienter...</div>
+    </div>
+
+    <!-- Main content with sidebar -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column" id="sidebar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-section="overview">
+                                <i data-feather="pie-chart"></i>
+                                <span class="nav-text">Vue d'ensemble</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="temporal">
+                                <i data-feather="clock"></i>
+                                <span class="nav-text">Analyse temporelle</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="geographic">
+                                <i data-feather="map"></i>
+                                <span class="nav-text">Analyse géographique</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="subjects">
+                                <i data-feather="book"></i>
+                                <span class="nav-text">Analyse par examen</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="verifiers">
+                                <i data-feather="users"></i>
+                                <span class="nav-text">Vérificateurs</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+                
+                <!-- Persistent Filters Section -->
+                <div id="persistent-filters" class="persistent-section mt-4">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        Filtres et Actions
+                                        <div class="d-md-none d-inline-block">
+                                            <button class="btn btn-primary btn-sm" id="sidebar-toggle">
+                                                <i data-feather="menu"></i> Menu
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" id="filters-toggle">
+                                                <i data-feather="chevron-down"></i> Filtres
+                                            </button>
+                                        </div>
+                                    </h5>
+                                    <div id="filters-content">
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <label for="start-date" class="form-label">Date de début</label>
+                                                    <input type="datetime-local" class="form-control" id="start-date">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <label for="end-date" class="form-label">Date de fin</label>
+                                                    <input type="datetime-local" class="form-control" id="end-date">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                                    <button id="apply-date-filter" class="btn btn-primary btn-sm d-none">Appliquer</button>
+                                                    <button id="refresh-data" class="btn btn-secondary btn-sm">Actualiser</button>
+                                                    <button id="export-data" class="btn btn-success btn-sm">Exporter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persistent Summary Section -->
+                <div id="persistent-summary" class="persistent-section">
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="custom-summary-card yellow-card">
+                                <div class="summary-content">
+                                    <div class="summary-title">Potentiel</div>
+                                    <div class="summary-number" id="yellow-count">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="custom-summary-card orange-card">
+                                <div class="summary-content">
+                                    <div class="summary-title">Annoté</div>
+                                    <div class="summary-number" id="orange-count">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="custom-summary-card red-card">
+                                <div class="summary-content">
+                                    <div class="summary-title">Confirmé</div>
+                                    <div class="summary-number" id="red-count">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="custom-summary-card gray-card">
+                                <div class="summary-content">
+                                    <div class="summary-title">Fausse Alerte</div>
+                                    <div class="summary-number" id="gray-count">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sections container -->
+                <div class="sections-container">
+                    <!-- Overview section -->
+                    <section id="overview-section" class="content-section active">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <h2 class="section-title">Vue d'ensemble</h2>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-4">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Analyses par région</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="regions-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="regions-chart"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Taux de triche par région</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="cheat-rate-regions-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="cheat-rate-regions-chart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Temporal analysis section -->
+                    <section id="temporal-section" class="content-section">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <h2 class="section-title">Analyse temporelle</h2>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                                                <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">Distribution horaire des analyses</h5>
+                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="hourly-distribution-chart" title="Agrandir le graphique">
+                                        <i data-feather="maximize-2"></i>
+                                    </button>
+                                </div>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="hourly-distribution-chart"></canvas>
+                                </div>
+                            </div>
+                                                                        <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">Distribution horaire du taux de triche</h5>
+                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="national-cheat-rate-chart" title="Agrandir le graphique">
+                                        <i data-feather="maximize-2"></i>
+                                    </button>
+                                </div>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="national-cheat-rate-chart"></canvas>
+                                </div>
+                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Geographic analysis section -->
+                    <section id="geographic-section" class="content-section">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <h2 class="section-title">Analyse géographique</h2>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-4">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Taux de triche par province</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="province-cheat-rate-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="province-cheat-rate-chart"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Taux de triche par centre d'examen</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="center-cheat-rate-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="center-cheat-rate-chart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Subjects analysis section -->
+                    <section id="subjects-section" class="content-section">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <h2 class="section-title">Analyse par examen</h2>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-4">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Taux de triche par session</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="session-cheat-rate-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="session-cheat-rate-chart"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h5 class="card-title mb-0">Taux de triche par type d'examen</h5>
+                                                    <button class="btn btn-sm btn-outline-primary zoom-chart-btn" data-chart="examen-cheat-rate-chart" title="Agrandir le graphique">
+                                                        <i data-feather="maximize-2"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="chart-container" style="height: 300px;">
+                                                    <canvas id="examen-cheat-rate-chart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Verifiers section -->
+                    <section id="verifiers-section" class="content-section">
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <h2 class="section-title">Vérificateurs</h2>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="verifiers-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nom du vérificateur</th>
+                                                        <th>Nombre des cas détectés</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="verifiers-table-body">
+                                                    <!-- Table rows will be added dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="copyright">
+            &copy; 2025 T3Shield. Tous droits réservés.
+        </div>
+    </footer>
+
+    <!-- Chart Zoom Modal -->
+    <div class="modal fade" id="chartZoomModal" tabindex="-1" aria-labelledby="chartZoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chartZoomModalLabel">Graphique agrandi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chart-container" style="height: 70vh;">
+                        <canvas id="zoomedChart"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/global-cache.js"></script>
+    <script src="js/user-management.js"></script>
+    <script src="js/stats-data-refined.js"></script>
+    <!-- <script src="js/stats-refined.js"></script> -->
+    <script>
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const currentTimeElement = document.getElementById('current-time');
+            if (currentTimeElement) {
+                currentTimeElement.textContent = now.toLocaleString();
+            }
+        }
+        
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+        
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            
+            // Mobile sidebar functionality
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Create overlay for sidebar
+            const overlay = document.createElement('div');
+            overlay.className = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+            
+            // Sidebar toggle
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
+                });
+            }
+            
+            // Close sidebar when clicking overlay
+            overlay.addEventListener('click', function() {
+                if (sidebar) {
+                    sidebar.classList.remove('show');
+                }
+                overlay.classList.remove('show');
+            });
+            
+            // Mobile filters toggle
+            const filtersToggle = document.getElementById('filters-toggle');
+            const filtersContent = document.getElementById('filters-content');
+            
+            if (filtersToggle && filtersContent) {
+                // Start with filters collapsed on mobile
+                if (window.innerWidth <= 768) {
+                    filtersContent.classList.add('collapsed');
+                    const icon = filtersToggle.querySelector('i');
+                    if (icon) {
+                        icon.setAttribute('data-feather', 'chevron-right');
+                        feather.replace();
+                    }
+                }
+                
+                filtersToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    filtersContent.classList.toggle('collapsed');
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (filtersContent.classList.contains('collapsed')) {
+                            icon.setAttribute('data-feather', 'chevron-right');
+                        } else {
+                            icon.setAttribute('data-feather', 'chevron-down');
+                        }
+                        feather.replace();
+                    }
+                });
+            }
+            
+            // Set up sidebar navigation
+            const navLinks = document.querySelectorAll('#sidebar .nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const mobileSectionTitle = document.getElementById('mobile-section-title');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Show the selected section
+                    const sectionId = this.getAttribute('data-section') + '-section';
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                    
+                    // Update mobile section title
+                    if (mobileSectionTitle) {
+                        const navText = this.querySelector('.nav-text');
+                        if (navText) {
+                            mobileSectionTitle.textContent = navText.textContent;
+                        } else {
+                            mobileSectionTitle.textContent = this.textContent.trim();
+                        }
+                    }
+                    
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth <= 768 && sidebar) {
+                        sidebar.classList.remove('show');
+                        overlay.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && sidebar) {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                }
+            });
+        });
+        
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to get user from localStorage
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            
+            if (user) {
+                // Update user info in header
+                const userNameElement = document.querySelector('.user-name');
+                if (userNameElement) {
+                    userNameElement.textContent = user.full_name;
+                }
+            } else {
+                // Check with server if we have a valid session
+                fetch('/t3shield/api/current-user')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Not authenticated');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Store user info
+                        localStorage.setItem('user', JSON.stringify(data));
+                        
+                        // Update user info in header
+                        const userNameElement = document.querySelector('.user-name');
+                        if (userNameElement) {
+                            userNameElement.textContent = data.full_name;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Auth check error:', error);
+                        // Redirect to login page if not authenticated
+                        window.location.href = '/login';
+                    });
+            }
+        });
+        
+        // Add logout functionality
+        function logout() {
+            fetch('/t3shield/api/logout', {
+                method: 'POST'
+            })
+            .then(() => {
+                // Clear local storage
+                localStorage.removeItem('user');
+                
+                // Redirect to login page
+                window.location.href = '/login';
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

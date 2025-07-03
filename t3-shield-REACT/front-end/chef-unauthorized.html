@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T3Shield - Accès Non Autorisé</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .shield-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .error-code {
+            color: #dc3545;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .divider {
+            margin: 1.5rem 0;
+            border-top: 1px solid #eee;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .info-box h3 {
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p {
+            margin-bottom: 0;
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .shield-icon {
+                font-size: 3rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .error-code {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="/static/logo-cropped.svg" alt="T3Shield Logo">
+        </div>
+        <div class="shield-icon">🛡️</div>
+        <div class="error-code">401</div>
+        <h1>Accès Non Autorisé</h1>
+        
+        <div class="info-box">
+            <h3>Session expirée ou invalide</h3>
+            <p>Votre session a expiré ou vous n'êtes pas autorisé à accéder à cette page.</p>
+        </div>
+        
+        <p>
+            Pour accéder au tableau de bord du centre d'examen, vous devez vous connecter avec des identifiants valides.
+        </p>
+        
+        <div class="divider"></div>
+        
+        <a href="#" onclick="goToLogin()" class="btn">Se Connecter</a>
+        <a href="/" class="btn btn-secondary">Accueil</a>
+    </div>
+
+    <script>
+        function goToLogin() {
+            // Clear any existing session storage first
+            sessionStorage.removeItem('chefCenter');
+            
+            // Get the current URL to extract the centre code
+            const currentPath = window.location.pathname;
+            const pathParts = currentPath.split('/');
+            
+            // Find the centre code in the URL path
+            if (pathParts.length >= 4 && pathParts[1] === 'chef' && pathParts[2] === 'centre') {
+                const centreCode = pathParts[3];
+                window.location.href = `/chef/centre/${centreCode}`;
+            } else {
+                // Fallback to home page if we can't determine the centre code
+                window.location.href = '/';
+            }
+        }
+        
+        // Clear any existing session data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            sessionStorage.removeItem('chefCenter');
+        });
+        
+        // Auto-redirect to login after 10 seconds
+        setTimeout(() => {
+            goToLogin();
+        }, 10000);
+    </script>
+</body>
+</html> 

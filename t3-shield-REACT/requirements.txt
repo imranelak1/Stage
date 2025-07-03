@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pymysql
+pydantic
+cryptography
+pandas
+openpyxl
+requests
+sqlalchemy
