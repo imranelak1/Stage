@@ -22,6 +22,7 @@ import time as time_module
 import logging
 import traceback
 from logger_config import logger
+from region_comparison import router as region_comparison_router
 
 
 app = FastAPI(
@@ -373,7 +374,10 @@ async def check_authentication(request: Request, call_next):
         "/static/", 
         "/css/", 
         "/js/",
-        "/favicon.ico"
+        "/favicon.ico",
+        "/t3shield/api/region-comparison",
+        "/t3shield/api/region-active-schools"
+          # <-- Add this line
     ]
     
     # Check if the path is public
@@ -4119,3 +4123,5 @@ def get_provinces_for_region(region_id: str):
         
     except Exception as e:
         return {"error": f"Failed to get provinces for region: {str(e)}"}
+
+app.include_router(region_comparison_router)
