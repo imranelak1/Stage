@@ -1,0 +1,1864 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    padding-top: 56px; /* Adjust to header height */
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 60px);
+    margin: 10px; /* Add this to account for fixed header */
+}
+
+/* Filter Panel Styles */
+.filter-panel {
+    width: 250px;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.filter-toggle {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+    white-space: nowrap;
+    min-height: 28px;
+    height: 28px;
+    margin-top: 0;
+    line-height: 1;
+}
+
+.export-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+    white-space: nowrap;
+    min-height: 36px;
+    height: 36px;
+    margin-top: 0;
+}
+
+.refresh-btn {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+    white-space: nowrap;
+    min-height: 28px;
+    height: 28px;
+    margin-top: 0;
+    line-height: 1;
+}
+
+.refresh-btn:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(23, 162, 184, 0.4);
+}
+
+.refresh-btn:active {
+    background-color: #117a8b;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+}
+
+.refresh-btn svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.3s ease;
+}
+
+.refresh-btn.loading {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.refresh-btn.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+.export-btn:hover {
+    background-color: #218838;
+}
+
+.export-btn:active {
+    background-color: #1e7e34;
+}
+
+.export-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+.filter-toggle:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+.filter-toggle:active {
+    background-color: #004085;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.filter-toggle .chevron {
+    color: white;
+    font-weight: normal;
+    font-size: 0.9rem;
+    margin-left: 8px;
+    display: inline-block;
+    min-width: 12px;
+    text-align: center;
+}
+
+.filter-toggle.collapsed .chevron {
+    transform: rotate(-90deg);
+}
+
+.filter-content {
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    max-height: 1000px;
+    opacity: 1;
+    padding: 0;
+}
+
+.filter-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+}
+
+.filter-panel h2 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.filter-option input {
+    margin-right: 8px;
+}
+
+.filter-note {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+.checkmark {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: #ccc;
+}
+
+.checkmark.yellow {
+    background-color: #FFD700;
+}
+
+.checkmark.orange {
+    background-color: #FF8C00;
+}
+
+.checkmark.red {
+    background-color: #DC143C;
+}
+
+.checkmark.gray {
+    background-color: #808080;
+}
+
+.time-range {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.time-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.time-input input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+/* Map Container Styles */
+.map-container {
+    flex: 1;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-top: 72px; /* Ensure map is not hidden under header and bar */
+}
+
+.map-container.with-details {
+    flex: 0 0 calc(100% - 350px); /* Only account for details panel width */
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+/* Details Panel Styles - Positioned at far right */
+.details-panel {
+    width: 350px;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    flex-shrink: 0;
+    order: 2; /* Place after map but before any potential gap */
+    margin-left: auto; /* Push to the far right */
+}
+
+.details-panel.active {
+    display: flex;
+}
+
+.details-header {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details-header h2 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+}
+
+.details-content {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.analyses-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.warning-summary {
+    margin-bottom: 20px;
+}
+  .count-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 20px;
+  }
+
+  .count-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      border-radius: 5px;
+      color: white;
+      max-width: 100px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      position: relative;
+  }
+
+  .count-box:hover {
+      transform: scale(1.05);
+  }
+
+  .count-box.selected {
+      transform: scale(1.1);
+  }
+
+  .count-box.selected::before {
+      content: '*';
+      position: absolute;
+      top: 2px;
+      right: 5px;
+      font-size: 14px;
+      color: white;
+  }
+
+  .count-box.selected::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+  .count-box.yellow {
+      background-color: #FFD700;
+  }
+
+  .count-box.orange {
+      background-color: #FF8C00;
+  }
+
+  .count-box.red {
+      background-color: #DC143C;
+  }
+
+  .count-box.gray {
+      background-color: #808080;
+  }
+
+  .count-number {
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .count-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .analyses-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+  }
+
+  .analyses-table th, 
+  .analyses-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+  }
+
+  .analyses-table th {
+      background-color: #f2f2f2;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+  }
+
+  .analyses-table tr:hover {
+      background-color: #f5f5f5;
+  }
+
+  .pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+  }
+
+  .pagination-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+      background-color: #2980b9;
+  }
+
+  .pagination-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+  }
+
+  #page-info {
+      font-size: 0.9rem;
+  }
+
+  .warning-details h3 {
+      margin: 15px 0 10px;
+      font-size: 1rem;
+      color: #34495e;
+  }
+
+  .chart-container {
+      height: 200px;
+      margin-bottom: 15px;
+  }
+
+  .warnings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .warning-item {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      border-left: 4px solid #ccc;
+  }
+
+  .warning-item.yellow {
+      border-left-color: #FFD700;
+  }
+
+  .warning-item.orange {
+      border-left-color: #FF8C00;
+  }
+
+  .warning-item.red {
+      border-left-color: #DC143C;
+  }
+
+  .warning-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+  }
+
+  .warning-location {
+      font-weight: bold;
+  }
+
+  .warning-time {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+  }
+
+  .warning-details-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+  }
+
+/* Add styles for mobility analysis markers */
+.dot.mobility {
+    background-color: #FF8C00;
+    color: white;
+}
+
+/* Ensure table columns are properly sized with CNE column */
+.analyses-table th, 
+.analyses-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Limit column width */
+}
+
+/* Style for CNE column */
+.analyses-table th:nth-child(5), 
+.analyses-table td:nth-child(5) {
+    max-width: 80px;
+    text-align: center;
+}
+
+/* Add a hover effect to show full content on overflow */
+.analyses-table td:hover {
+    white-space: normal;
+    overflow: visible;
+    background-color: #f8f9fa;
+    z-index: 1;
+    position: relative;
+}
+
+/* Map Marker Styles */
+.warning-marker {
+    display: flex;
+    gap: 2px;
+}
+
+.dot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    border: 1px solid #616161;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        1px -1px 2px rgba(0, 0, 0, 0.8),
+        -1px 1px 2px rgba(0, 0, 0, 0.8),
+        1px 1px 2px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+    position: relative;
+}
+
+/* Special styling for yellow dots - white text with black shadow */
+.dot.yellow {
+    color: white;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        1px -1px 2px rgba(0, 0, 0, 0.8),
+        -1px 1px 2px rgba(0, 0, 0, 0.8),
+        1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* AREF level dots - smaller size */
+.analysis-marker .dot {
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+}
+
+.dot:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.region-label {
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        1px -1px 2px rgba(0, 0, 0, 0.8),
+        -1px 1px 2px rgba(0, 0, 0, 0.8),
+        1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Region label styling */
+.region-label div {
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        1px -1px 2px rgba(0, 0, 0, 0.8),
+        -1px 1px 2px rgba(0, 0, 0, 0.8),
+        1px 1px 2px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+}
+
+/* Legend Styles */
+.legend {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.legend h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid #999;
+}
+
+.legend-toggle {
+    background: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.legend-toggle:hover {
+    background: #f0f0f0;
+}
+
+/* Legend Styles */
+.info.legend {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.info.legend h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid #999;
+}
+
+.legend-toggle {
+    background: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.legend-toggle:hover {
+    background: #f0f0f0;
+}
+
+
+/* Province styles */
+.province-tooltip {
+    font-size: 12px;
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: white;
+    text-shadow: 
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 1px rgba(0, 0, 0, 0.8),
+        1px -1px 1px rgba(0, 0, 0, 0.8),
+        -1px 1px 1px rgba(0, 0, 0, 0.8),
+        1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* Back button styles */
+.back-button {
+    margin: 10px;
+}
+
+.back-button button {
+    padding: 8px 12px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+}
+
+.back-button button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Add this to your existing CSS file */
+
+.back-button {
+    margin-top: 10px;
+}
+
+#back-to-country {
+    background-color: white;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#back-to-country:hover {
+    background-color: #2c3e50;
+    color: white;
+}
+
+
+/* Improve base responsive design */
+html, body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Adjust header for small screens */
+@media (max-width: 576px) {
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .nav-links a {
+        padding: 0.3rem 0.5rem;
+        margin: 0 0.1rem;
+    }
+    
+    .user-info {
+        font-size: 0.8rem;
+    }
+    
+    #current-time {
+        display: none; /* Hide time on very small screens */
+    }
+}
+
+/* Enhance existing media queries */
+@media (max-width: 1200px) {
+    .details-panel {
+        width: 300px;
+    }
+    
+    .map-container.with-details {
+        flex: 0 0 calc(100% - 300px); /* Only account for details panel width */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow: hidden; /* Prevent body scrolling on mobile */
+    }
+    
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000; /* Ensure header is above everything */
+        background: #2c3e50;
+    }
+    
+    .container {
+        flex-direction: column;
+        height: calc(100vh - 40px); /* Adjust for smaller mobile header */
+        margin: 0; /* Remove margin on mobile */
+        gap: 0; /* Remove gaps between elements */
+    }
+    
+    .filter-panel {
+        width: 100% !important;
+        max-height: 30vh; /* Reduced filter panel height for better map space */
+        order: 1;
+        flex-shrink: 0;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 100; /* Above other elements */
+        position: relative;
+        overflow-y: auto;
+        border-bottom: 1px solid #ddd;
+        margin-top: 5px; /* Reduced margin for mobile */
+        padding: 8px; /* Smaller padding */
+    }
+    
+    /* Mobile filter toggle - original design */
+    .filter-toggle {
+        margin-bottom: 10px;
+        font-size: 1rem;
+        padding: 8px 16px;
+        background: #3498db;
+        color: white;
+        border-radius: 6px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+        text-align: center;
+        justify-content: center;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 10;
+        min-height: 40px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Mobile filter header */
+    .filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        gap: 8px;
+    }
+    
+    /* Mobile export button */
+    .export-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 1px 3px rgba(40, 167, 69, 0.3);
+        white-space: nowrap;
+        min-width: auto;
+        min-height: 40px;
+        height: 40px;
+        margin-top: 0;
+        align-self: flex-start;
+    }
+    
+    /* Mobile refresh button */
+    .refresh-btn {
+        background-color: #17a2b8;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 1px 3px rgba(23, 162, 184, 0.3);
+        white-space: nowrap;
+        min-width: auto;
+        min-height: 40px;
+        height: 40px;
+        margin-top: 0;
+        align-self: flex-start;
+    }
+    
+    .refresh-btn:hover {
+        background-color: #138496;
+    }
+    
+    .refresh-btn:active {
+        background-color: #117a8b;
+    }
+    
+    .refresh-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .refresh-btn.loading {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+    
+    .refresh-btn.loading svg {
+        animation: spin 1s linear infinite;
+    }
+    
+    .export-btn:hover {
+        background-color: #218838;
+    }
+    
+    .filter-toggle:hover {
+        background: #2980b9;
+        transform: none; /* Remove transform */
+        box-shadow: 0 1px 3px rgba(52, 152, 219, 0.4);
+    }
+    
+    .filter-toggle:active {
+        transform: none; /* Remove transform */
+        box-shadow: 0 1px 1px rgba(52, 152, 219, 0.3);
+    }
+    
+    .filter-toggle .chevron {
+        color: white;
+        font-weight: normal;
+        font-size: 0.6rem; /* Very small chevron */
+        margin-left: 2px; /* Very small margin */
+        display: inline-block;
+        min-width: 6px; /* Very small width */
+        text-align: center;
+    }
+    
+    .filter-content {
+        max-height: 25vh; /* Reduced to ensure time filter is accessible */
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    .filter-content.collapsed {
+        max-height: 0;
+        opacity: 0;
+        padding: 0;
+    }
+    
+    .map-container {
+        flex: 1; /* Take remaining space */
+        order: 2;
+        position: relative;
+        min-height: 250px; /* Increased minimum height for better map visibility */
+    }
+    
+    .map-container.with-details {
+        height: 50vh !important; /* Better balance between map and details */
+        flex: 0 0 50vh; /* Fixed height when details are shown */
+    }
+    
+    .details-panel {
+        width: 100% !important; /* Override desktop width */
+        height: auto;
+        max-height: 45vh; /* Set a reasonable max height */
+        order: 3;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 99; /* Below filter panel */
+        overflow-y: hidden; /* Let content handle overflow */
+        position: relative;
+        background-color: white;
+        border-top: 2px solid #3498db; /* More visible border */
+        display: none; /* Reset display */
+        flex: 0 0 auto; /* Don't grow/shrink */
+    }
+    
+    .details-panel.active {
+        display: flex !important; /* Override desktop display */
+        flex-direction: column;
+        max-height: 45vh; /* Ensure it doesn't take too much space */
+    }
+    
+    .details-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px; /* Reduced padding */
+        min-height: 0; /* Allow content to shrink */
+        display: flex;
+        flex-direction: column;
+        max-height: 40vh; /* Ensure scrollable content */
+    }
+    
+    .analysis-summary {
+        flex-shrink: 0; /* Don't shrink the summary */
+        margin-bottom: 8px; /* Reduced margin */
+    }
+    
+    .analysis-details {
+        flex: 1; /* Take remaining space */
+        min-height: 0; /* Allow shrinking */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .analyses-table-container {
+        flex: 1; /* Take remaining space */
+        min-height: 0; /* Allow shrinking */
+        overflow-y: auto;
+        max-height: 25vh; /* Set reasonable max height for mobile */
+        border: 1px solid #eee; /* Add border for better definition */
+        border-radius: 4px;
+    }
+    
+    /* Ultra-compact filter design for mobile */
+    .filter-section {
+        margin-bottom: 10px; /* Reduced spacing */
+        border-bottom: 1px solid #eee;
+        padding-bottom: 6px;
+    }
+    
+    .filter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0; /* Ensure time filter is fully visible */
+    }
+    
+    .filter-section h3 {
+        font-size: 0.85rem; /* Slightly smaller */
+        margin-bottom: 5px;
+        color: #2c3e50;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .filter-section h3::before {
+        content: "●";
+        color: #3498db;
+        font-size: 0.7rem;
+    }
+    
+    /* Compact grid layout for filter options */
+    .filter-options {
+        display: grid !important; /* Override desktop flex */
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); /* Slightly smaller */
+        gap: 5px; /* Reduced gap */
+        margin: 0;
+    }
+    
+    .filter-option {
+        font-size: 0.7rem; /* Smaller font */
+        padding: 5px 6px; /* Reduced padding */
+        min-height: 26px; /* Smaller height */
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .filter-option:hover {
+        background: #e9ecef;
+        border-color: #3498db;
+    }
+    
+    .filter-option input[type="checkbox"] {
+        margin: 0;
+        width: 12px; /* Smaller checkbox */
+        height: 12px;
+    }
+    
+    .checkmark {
+        width: 8px; /* Smaller checkmark */
+        height: 8px;
+        border-radius: 50%;
+        margin: 0;
+        flex-shrink: 0;
+    }
+    
+    /* Compact time range */
+    .time-range {
+        display: grid !important; /* Override desktop flex */
+        grid-template-columns: 1fr 1fr;
+        gap: 6px; /* Reduced gap */
+    }
+    
+    .time-input {
+        display: flex;
+        flex-direction: column;
+        gap: 2px; /* Reduced gap */
+    }
+    
+    .time-input label {
+        font-size: 0.7rem; /* Smaller font */
+        font-weight: bold;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+    }
+    
+    .time-input input {
+        min-height: 26px; /* Smaller height */
+        font-size: 0.7rem; /* Smaller font */
+        padding: 3px 5px; /* Reduced padding */
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+    }
+    
+    .time-input input:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    /* Improve details panel for mobile */
+    .count-container {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr); /* Show all 4 in one row */
+        gap: 2px; /* Very small gap */
+        margin-bottom: 8px;
+    }
+    
+    .count-box {
+        min-width: auto; /* Remove min-width constraint */
+        padding: 2px 4px; /* Much smaller padding */
+        min-height: 30px; /* Smaller height */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .count-number {
+        font-size: 0.9rem; /* Smaller number */
+        line-height: 1;
+        margin: 0;
+    }
+    
+    .count-label {
+        font-size: 0.55rem; /* Much smaller label */
+        line-height: 1.1;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+    
+    .analyses-table th, 
+    .analyses-table td {
+        padding: 4px;
+        max-width: 80px;
+        font-size: 0.8rem;
+    }
+    
+    .analyses-table-container {
+        max-height: 200px; /* Smaller on mobile */
+    }
+
+    .analyses-table th,
+    .analyses-table td {
+        padding: 6px 4px;
+        word-break: break-word;
+    }
+
+    /* Mobile optimizations for filters */
+    .filter-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: flex-start;
+    }
+    
+    .filter-option {
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 2px 4px;
+        font-size: 0.7rem;
+        border-radius: 2px;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        min-width: auto;
+    }
+    
+    .filter-option:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .filter-option input[type="checkbox"] {
+        margin-right: 3px;
+        transform: scale(0.8);
+    }
+    
+    .filter-option .checkmark {
+        width: 8px;
+        height: 8px;
+        margin-right: 3px;
+        border-radius: 1px;
+    }
+    
+    .filter-option span:not(.checkmark) {
+        font-size: 0.7rem;
+        line-height: 1;
+    }
+    
+    /* Make time range inputs more compact */
+    .time-range {
+        flex-direction: row;
+        gap: 6px;
+    }
+    
+    .time-input {
+        flex: 1;
+        margin: 0;
+    }
+    
+    .time-input label {
+        font-size: 0.7rem;
+        margin-bottom: 1px;
+        display: block;
+    }
+    
+    .time-input input {
+        font-size: 0.7rem;
+        padding: 2px 4px;
+        height: 24px;
+        border-radius: 2px;
+    }
+    
+    /* Make filter sections more compact */
+    .filter-section {
+        margin-bottom: 8px;
+    }
+    
+    .filter-section h3 {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+}
+
+/* Add a new breakpoint for very small screens */
+@media (max-width: 480px) {
+    .filter-panel h2,
+    .details-header h2 {
+        font-size: 1rem;
+    }
+    
+    .filter-option {
+        font-size: 0.8rem;
+    }
+    
+    .analyses-table {
+        font-size: 0.8rem;
+    }
+    
+    .analyses-table th, 
+    .analyses-table td {
+        padding: 4px;
+        max-width: 70px;
+    }
+    
+    /* Simplify the pagination controls */
+    .pagination-controls {
+        gap: 5px;
+    }
+    
+    .pagination-btn {
+        padding: 3px 6px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loading-indicator.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-circle {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-progress {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Section loading indicator */
+.section-loading {
+    position: relative;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-loading::before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: section-spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+.section-loading::after {
+    content: 'Chargement...';
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@keyframes section-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Logout button styles */
+.logout-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Touch-friendly improvements for mobile */
+@media (max-width: 768px) {
+    /* Increase touch targets */
+    .filter-toggle {
+        min-height: 44px; /* iOS recommended minimum */
+        padding: 12px 0;
+    }
+    
+    .filter-option {
+        min-height: 44px;
+        padding: 8px 0;
+    }
+    
+    .count-box {
+        min-height: 44px;
+        min-width: 60px;
+    }
+    
+    /* Improve scrolling */
+    .filter-panel,
+    .details-panel {
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    /* Ensure proper spacing */
+    .filter-section {
+        margin-bottom: 15px;
+    }
+    
+    .time-input input {
+        min-height: 30px;
+        font-size: 10px; /* Prevent zoom on iOS */
+    }
+    
+    /* Improve table readability on mobile */
+    .analyses-table {
+        font-size: 0.75rem;
+    }
+    
+    .analyses-table th,
+    .analyses-table td {
+        padding: 6px 4px;
+        word-break: break-word;
+    }
+}
+
+/* Responsive loading styles */
+@media (max-width: 768px) {
+    .loading-progress,
+    .loading-circle {
+        width: 50px;
+        height: 50px;
+        border-width: 3px;
+        margin-bottom: 15px;
+    }
+    
+    .loading-text {
+        font-size: 14px;
+    }
+    
+    .loading-message {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .loading-progress,
+    .loading-circle {
+        width: 40px;
+        height: 40px;
+        border-width: 2px;
+        margin-bottom: 12px;
+    }
+    
+    .loading-text {
+        font-size: 12px;
+    }
+    
+    .loading-message {
+        font-size: 11px;
+        margin-top: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-progress,
+    .loading-circle {
+        width: 35px;
+        height: 35px;
+        border-width: 2px;
+        margin-bottom: 10px;
+    }
+    
+    .loading-text {
+        font-size: 11px;
+    }
+    
+    .loading-message {
+        font-size: 10px;
+        margin-top: 5px;
+    }
+}
+
+/* Footer adjustments for mobile */
+.footer {
+    position: relative !important; /* Change from fixed to relative on mobile */
+    bottom: auto !important;
+    width: 100%;
+    background-color: rgba(44, 62, 80, 0.9);
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+    font-size: 12px;
+    z-index: 900;
+    order: 4; /* Place at the end */
+}
+
+/* Floating Filter/Export Bar */
+.floating-filter-bar {
+    position: fixed;
+    top: 60px; /* Closer to header */
+    left: 32px;
+    transform: none;
+    z-index: 1001;
+    display: flex;
+    gap: 7px;
+    background: white;
+    border-radius: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 3px 7px;
+    align-items: center;
+}
+
+.floating-filter-bar .filter-toggle {
+    margin-bottom: 0;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    background: #3498db;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(52, 152, 219, 0.10);
+}
+
+.floating-filter-bar .export-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 1px 2px rgba(40, 167, 69, 0.10);
+    min-height: 28px;
+    height: 28px;
+}
+
+/* Overlay Filter Panel */
+.filter-overlay {
+    position: fixed;
+    top: 88px; /* Position below the floating filter bar (60px header + 28px bar) */
+    left: 32px; /* Align with the floating filter bar */
+    width: auto;
+    height: auto;
+    background: none;
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 0;
+}
+
+.filter-overlay-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    padding: 16px 14px 14px 14px;
+    min-width: 280px;
+    max-width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid #e0e0e0;
+}
+
+.close-overlay-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #888;
+    cursor: pointer;
+    z-index: 10;
+    display: block; /* Show close button on desktop */
+}
+
+/* Keep export button visible when overlay is open */
+.floating-filter-bar {
+    position: fixed;
+    top: 60px; /* Closer to header */
+    left: 32px;
+    transform: none;
+    z-index: 1001;
+    display: flex;
+    gap: 7px;
+    background: white;
+    border-radius: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 3px 7px;
+    align-items: center;
+}
+
+/* Hide only the filter toggle button when overlay is open */
+.floating-filter-bar .filter-toggle.hidden {
+    display: none;
+}
+
+/* Remove extra spacing above/below map and filter bar */
+.container, .map-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Hide old filter panel if present */
+.filter-panel {
+    box-shadow: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .floating-filter-bar {
+        top: 68px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 2px 3px;
+        gap: 4px;
+        border-radius: 6px;
+    }
+    .floating-filter-bar .filter-toggle, .floating-filter-bar .export-btn {
+        font-size: 0.82rem;
+        min-height: 24px;
+        height: 24px;
+        padding: 3px 7px;
+        border-radius: 4px;
+    }
+    
+    /* Mobile overlay behavior - full screen */
+    .filter-overlay {
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.25);
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 60px;
+    }
+    
+    .filter-overlay-content {
+        min-width: 90vw;
+        max-width: 95vw;
+        padding: 14px 6px 10px 6px;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    
+    .close-overlay-btn {
+        display: block;
+        top: 10px;
+        right: 14px;
+        font-size: 2rem;
+    }
+    
+    .mobile-filter-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+}
+
+@media (min-width: 601px) {
+    .mobile-filter-toggle {
+        display: none;
+    }
+}
+
+/* Fixed Header */
+.header, .navbar, .main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000;
+}
+
+/* Offset Leaflet zoom controls below header */
+.leaflet-top.leaflet-left {
+    top: 88px !important; /* header 56px + bar 16px + some gap */
+}
+
+@media (max-width: 600px) {
+    .map-container {
+        margin-top: 80px;
+    }
+    .leaflet-top.leaflet-left {
+        top: 96px !important;
+    }
+}
+
+/* Details Record Modal */
+.details-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.25);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.details-modal-content {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 24px 18px 18px 18px;
+    min-width: 320px;
+    max-width: 95vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+.close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #888;
+    cursor: pointer;
+    z-index: 10;
+}
+#details-modal-body {
+    margin-top: 18px;
+    font-size: 1rem;
+    word-break: break-word;
+}
+@media (max-width: 600px) {
+    .details-modal-content {
+        min-width: 90vw;
+        padding: 14px 6px 10px 6px;
+    }
+}
+
+/* Mobile-specific button sizing for map dashboard */
+@media (max-width: 768px) {
+    .refresh-btn {
+        padding: 3px 4px !important;
+        font-size: 0.6rem !important;
+        min-height: 24px !important;
+        height: 24px !important;
+        gap: 1px !important;
+    }
+    
+    .refresh-btn svg {
+        width: 10px !important;
+        height: 10px !important;
+    }
+    
+    .export-btn {
+        padding: 3px 4px !important;
+        font-size: 0.6rem !important;
+        min-height: 24px !important;
+        height: 24px !important;
+        gap: 1px !important;
+    }
+    
+    .export-btn svg {
+        width: 10px !important;
+        height: 10px !important;
+    }
+    
+    .filter-toggle {
+        padding: 3px 6px !important;
+        font-size: 0.6rem !important;
+        min-height: 24px !important;
+        height: 24px !important;
+    }
+}

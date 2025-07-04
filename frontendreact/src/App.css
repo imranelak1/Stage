@@ -40,3 +40,72 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Responsive dashboard styles */
+@media (max-width: 1024px) {
+  .dashboard-section, .summary-cards-section, .trend-chart-section, .data-table-section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-section, .summary-cards-section, .trend-chart-section, .data-table-section {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .summary-cards-section {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+  .filters-section {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  .trend-chart-section {
+    min-height: 220px !important;
+  }
+}
+@media (max-width: 480px) {
+  .dashboard-section, .summary-cards-section, .trend-chart-section, .data-table-section {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+  .summary-cards-section {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+  .filters-section {
+    flex-direction: column !important;
+    gap: 0.25rem !important;
+  }
+  .trend-chart-section {
+    min-height: 160px !important;
+  }
+}
+
+/* Make tables horizontally scrollable on mobile */
+.data-table-section .overflow-x-auto, .data-table-section table {
+  width: 100% !important;
+  min-width: 600px;
+}
+@media (max-width: 768px) {
+  .data-table-section .overflow-x-auto, .data-table-section table {
+    min-width: 400px;
+  }
+}
+@media (max-width: 480px) {
+  .data-table-section .overflow-x-auto, .data-table-section table {
+    min-width: 320px;
+  }
+}
+
+/* Touch-friendly controls */
+input, select, button {
+  font-size: 1rem;
+  min-height: 2.5rem;
+  border-radius: 0.5rem;
+}

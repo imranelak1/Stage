@@ -17,6 +17,7 @@ import Analytics from "./pages/Analytics";
 import RegionsAnalytics from "./pages/RegionsAnalytics";
 import VerificationAnalytics from "./pages/VerificationAnalytics";
 import Settings from "./pages/Settings";
+import LegacyMap from "./pages/LegacyMap";
 
 // Import hooks and utilities
 import { useStatisticsData } from "./hooks/useStatisticsData";
@@ -128,6 +129,7 @@ const AppContent = () => {
         <Route path="/regions" element={<RegionsAnalytics />} />
         <Route path="/verification" element={<VerificationAnalytics />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/map" element={<LegacyMap />} />
       </Routes>
     </Layout>
   );
